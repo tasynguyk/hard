@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Sutrixmedia</title>
+<title>Sutrixmedia | Edit</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="">
 <meta name="author" content="">
@@ -75,6 +75,10 @@ body {
     <fieldset>
         <?php
             echo validation_errors();
+            if(isset($error))
+            {
+              echo '<br />'.$error;
+            }
         ?>
       <div class="control-group">
         <label class="control-label">User ID</label>
@@ -118,7 +122,7 @@ body {
       <div class="control-group">
         <label class="control-label">Day of birth</label>
         <div class="controls">
-          <select class="span1">
+          <select class="span1" name="day">
             <option value="0">Day</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -152,7 +156,7 @@ body {
             <option value="30">30</option>
             <option value="31">31</option>
           </select>
-          <select class="span1">
+          <select class="span1" name="month">
             <option value="0">Month</option>
             <option value="1">1</option>
             <option value="2">2</option>
@@ -167,7 +171,7 @@ body {
             <option value="11">11</option>
             <option value="12">12</option>
           </select>
-          <select class="span1">
+          <select class="span1" name="year">
             <option value="0">Year</option>
             <option value="2005">2005</option>
             <option value="2004">2004</option>

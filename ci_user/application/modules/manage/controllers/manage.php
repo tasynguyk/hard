@@ -144,10 +144,45 @@ class Manage extends MX_Controller {
                                 }
                                 else
                                 {
-                                    $username = $this->input->post('username');
-                                    $password = $this->input->post('password');
-                                    $repassword = $this->input->post('repassword');
-                                    $email = $this->input->post('email');
+                                    $this->load->model('user_model');
+                                    $this->load->model('time_model');
+                                    $day = $this->input->post('day');
+                                    $month = $this->input->post('month');
+                                    $year = $this->input->post('year');
+
+                                    if(!$this->time_model->check_time($day,$month,$year))
+                                    {
+                                        $data['error'] = 'Day of birth valid';
+                                        $this->load->view('edit_view', $data);
+                                    }
+                                    else
+                                    {
+                                        $id = $this->session->userdata('userid');
+                                        $username = $this->input->post('username');
+                                        $password = $this->input->post('password');
+                                        $repassword = $this->input->post('repassword');
+                                        $email = $this->input->post('email');
+                                        $gender = $this->input->post('gender');
+                                        $permission = $this->input->post('permisson');
+                                        $status = $this->input->post('status');
+                                        if(!$this->user_model->check_user_edit($id, $username, $email))
+                                        {
+                                            $data['error'] = 'Username or email has been used';
+                                            $this->load->view('edit_view',$data);
+                                        }
+                                        else
+                                        {
+                                            $update = array(
+                                            'username' => $username,
+                                            'password' => $password,
+                                            'email' => $email,
+                                            'gender' => $gender,
+                                            'permission' => $permission,
+                                            'status' => $status
+                                            );
+                                            $this->user_model->edit_user_byid($update, $id);
+                                        }
+                                    }
                                 }
                             }
                             //redirect(base_url().'index.php/manage/manage/edit', 'location');

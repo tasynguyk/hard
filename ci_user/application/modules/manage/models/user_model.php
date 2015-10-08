@@ -33,6 +33,26 @@ class user_model extends CI_Model
         $this->db->where('id', $id);
         $this->db->delete('user'); 
     }
+
+    function check_user_edit($id, $username, $email)
+    {
+        $q1 = $this->db->query("select * from user where username='$username' and id <>'$id'");
+        $q2 = $this->db->query("select * from user where email='$email' and id <>'$id'");
+        if($q1->num_rows()+$q2->num_rows()>0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
+    }
+
+    function edit_user_byid($data, $id)
+    {
+        $this->db->where('id',$id);
+        $this->db->update('user',$data);
+    }
 }
  
 ?>

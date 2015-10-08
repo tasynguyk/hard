@@ -16,7 +16,7 @@
 | environments.
 |
 */
-$config['base_url'] = 'http://localhost/ci_user';
+$config['base_url'] = 'http://localhost:81/ci_user';
 
 /*
 |--------------------------------------------------------------------------

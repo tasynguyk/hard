@@ -16,7 +16,15 @@ $lang['year'] = 'Year';
 $lang['public'] = 'Public';
 $lang['private'] = 'Private';
 $lang['create'] = 'Create';
-$lang['cance'] = 'Cancel';
+$lang['cancel'] = 'Cancel';
+$lang['user_id'] = 'User ID';
+$lang['edit'] = 'Edit';
+$lang['delete'] = 'Delete';
+$lang['dob_valid'] = 'Day of birth valid';
+$lang['company'] = 'Company';
+
+$lang['username_email_use'] = 'Username or email has been used.';
+$lang['username_pass_valid'] = 'Invalid username or password.';
 
 $lang['up_img'] = 'Upload image';
 $lang['upload'] = 'Upload';
@@ -40,3 +48,11 @@ $lang['logout'] = 'Sign out';
 $lang['lang'] = 'Language';
 $lang['lang_vi'] = 'Vietnamese';
 $lang['lang_en'] = 'English';
+$lang['compele'] = 'Compele.';
+
+$lang['birthday'] = 'Birthday';
+$lang['sort'] = 'Sort';
+$lang['search'] = 'Search';
+$lang['sort_by'] = 'Sort by';
+$lang['search_for'] = 'Search for';
+$lang['manage_user'] = 'Manage user';

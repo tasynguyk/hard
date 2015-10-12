@@ -17,6 +17,14 @@ $lang['public'] = 'Công khai';
 $lang['private'] = 'Ẩn';
 $lang['create'] = 'Tạo';
 $lang['cancel'] = 'Hủy';
+$lang['user_id'] = 'Mã số người dùng';
+$lang['edit'] = 'Chỉnh sửa';
+$lang['delete'] = 'Xóa';
+$lang['dob_valid'] = 'Ngày sinh sai định dạng.';
+$lang['company'] = 'Công ty';
+
+$lang['username_email_used'] = 'Tên đăng nhập hoặc email đã được sử dụng.';
+$lang['username_pass_valid'] = 'Tên đăng nhập hoặc mật khẩu không chính xác.';
 
 $lang['up_img'] = 'Đăng ảnh';
 $lang['upload'] = 'Tải lên';
@@ -38,4 +46,10 @@ $lang['logout'] = 'Thoát';
 $lang['lang'] = 'Ngôn ngữ';
 $lang['lang_vi'] = 'Tiếng Việt';
 $lang['lang_en'] = 'Tiếng Anh';
+$lang['compele'] = 'Thành công.';
 
+$lang['birthday'] = 'Ngày sinh';
+$lang['sort'] = 'Sắp xếp';
+$lang['search'] = 'Tìm kiếm';
+$lang['sort_by'] = 'Sắp xếp theo';
+$lang['search_for'] = 'Tìm kiếm theo';

@@ -22,6 +22,16 @@ class Manage extends MX_Controller {
             $this->load->library('form_validation');
             $this->load->database();
             $this->load->helper(array('form', 'url','date','download','file'));
+            if($this->session->userdata('lang'))
+            {
+                $lang_use = $this->session->userdata('lang');
+                $this->lang->load('form',$lang_use);
+                $this->lang->load('form_validation',$lang_use);
+            }
+            else
+            {
+                $this->lang->load('form','vietnamese');
+            }
         }
          
 	public function index($page = "1")
@@ -153,7 +163,7 @@ class Manage extends MX_Controller {
                   //  $data['sortby'] = $order;
                     
                     $data['page_content'] = $this->load->view('list_view',$data,true);
-                    $data['page_sub_title'] = "Manage user";
+                    $data['page_sub_title'] = $this->lang->line('manage_user');
                     $data['page_title'] = "Sutrix media | Manage user";
                     $data['page_js'] = $this->load->view('js/edit_js_view');
                     $this->load->view('master_layout', $data);
@@ -352,66 +362,70 @@ class Manage extends MX_Controller {
                             {
                                 $this->load->model('user_model');
                                 $data['user'] = $this->user_model->get_user_byid($id);
-                                $this->load->view('edit_view',$data);
+                                $data['page_content'] = $this->load->view('edit_view',$data,true);
+                               // $this->load->view('master_layout',$data);
                             }
-                            else {
-                                $this->form_validation->set_rules('username','Username','trim|required');
-                                $this->form_validation->set_rules('password','Password','trim|required');
-                                $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
-                                $this->form_validation->set_rules('email','Email','trim|required|valid_email');
-                                if($this->form_validation->run()==FALSE)
-                                {
-                                    $this->load->view('edit_view');
-                                }
-                                else
-                                {
-                                    $this->load->model('user_model');
-                                    $this->load->model('time_model');
-                                    $day = $this->input->post('day');
-                                    $month = $this->input->post('month');
-                                    $year = $this->input->post('year');
-
-                                    if(!$this->time_model->check_time($day,$month,$year))
+                            else 
+                            {
+                                    $this->form_validation->set_rules('username','Username','trim|required');
+                                    $this->form_validation->set_rules('password','Password','trim|required');
+                                    $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
+                                    $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+                                    if($this->form_validation->run()==FALSE)
                                     {
-                                        $data['error'] = 'Day of birth valid';
-                                        $this->load->view('edit_view', $data);
+                                        $data['page_content'] = $this->load->view('edit_view','',true);
                                     }
                                     else
                                     {
-                                        $id = $this->session->userdata('userid');
-                                        $username = $this->input->post('username');
-                                        $password = md5($this->input->post('password'));
-                                        $email = $this->input->post('email');
-                                        $gender = $this->input->post('gender');
-                                        $permission = $this->input->post('permission');
-                                        $status = $this->input->post('status');
-                                        if(!$this->user_model->check_user_edit($id, $username, $email))
+                                        $this->load->model('user_model');
+                                        $this->load->model('time_model');
+                                        $day = $this->input->post('day');
+                                        $month = $this->input->post('month');
+                                        $year = $this->input->post('year');
+
+                                        if(!$this->time_model->check_time($day,$month,$year))
                                         {
-                                            $data['error'] = 'Username or email has been used';
-                                            $this->load->view('edit_view',$data);
+                                            $data['error'] = 'Day of birth valid';
+                                            $data['page_content'] = $this->load->view('edit_view', $data,true);
                                         }
                                         else
                                         {
-                                            $dob = $year.'-'.$month.'-'.$day;
-                                            $update = array(
-                                            'username' => $username,
-                                            'password' => $password,
-                                            'email' => $email,
-                                            'gender' => $gender,
-                                            'permission' => $permission,
-                                            'status' => $status,
-                                            'dob' => $dob
-                                            );
-                                            //print_r($update);
-                                            $this->user_model->edit_user_byid($update, $id);
-                                            $this->session->unset_userdata('userid');
-                                            $this->session->unset_userdata('choose');
-                                            redirect(base_url().'index.php/manage/manage/manage', 'location');
+                                            $id = $this->session->userdata('userid');
+                                            $username = $this->input->post('username');
+                                            $password = md5($this->input->post('password'));
+                                            $email = $this->input->post('email');
+                                            $gender = $this->input->post('gender');
+                                            $permission = $this->input->post('permission');
+                                            $status = $this->input->post('status');
+                                            if(!$this->user_model->check_user_edit($id, $username, $email))
+                                            {
+                                                $data['error'] = $this->lang->line('username_email_use');
+                                                $data['page_content'] = $this->load->view('edit_view',$data,true);
+                                            }
+                                            else
+                                            {
+                                                $dob = $year.'-'.$month.'-'.$day;
+                                                $update = array(
+                                                'username' => $username,
+                                                'password' => $password,
+                                                'email' => $email,
+                                                'gender' => $gender,
+                                                'permission' => $permission,
+                                                'status' => $status,
+                                                'dob' => $dob
+                                                );
+                                                //print_r($update);
+                                                $this->user_model->edit_user_byid($update, $id);
+                                                $this->session->unset_userdata('userid');
+                                                $this->session->unset_userdata('choose');
+                                                redirect(base_url().'index.php/manage/manage/manage', 'location');
+                                            }
                                         }
                                     }
-                                }
                             }
-                            //redirect(base_url().'index.php/manage/manage/edit', 'location');
+                            $data['page_title'] = '';
+                            $data['page_sub_title'] = $this->lang->line('create_user');
+                            $this->load->view('master_layout',$data);
                         }
                     }
                     else {

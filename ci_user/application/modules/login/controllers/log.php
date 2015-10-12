@@ -26,10 +26,12 @@ class Log extends MX_Controller {
             {
                 $lang_use = $this->session->userdata('lang');
                 $this->lang->load('form',$lang_use);
+                $this->lang->load('form_validation',$lang_use);
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
+                $this->lang->load('form_validation','english');
             }
         }
         
@@ -64,7 +66,7 @@ class Log extends MX_Controller {
                         }
                         else
                         {//sua error
-                            $data['error'] = 'Invalid username or password.';
+                            $data['error'] = $this->lang->line('username_pass_valid');
                             $this->load->view('login_view',$data);
                         }
                     }

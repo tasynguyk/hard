@@ -1,13 +1,15 @@
 <?php
     if($this->session->userdata('lang'))
-    {
-        $lang_use = $this->session->userdata('lang');
-        $this->lang->load('form',$lang_use);
-    }
-    else
-    {
-        $this->lang->load('form','vietnamese');
-     }
+            {
+                $lang_use = $this->session->userdata('lang');
+                $this->lang->load('form',$lang_use);
+                $this->lang->load('form_validation',$lang_use);
+            }
+            else
+            {
+                $this->lang->load('form','english');
+                $this->lang->load('form_validation','english');
+            }
 ?>
 <!DOCTYPE html>
 <html lang="en">

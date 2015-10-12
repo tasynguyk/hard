@@ -1,130 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<title>Sutrixmedia | Edit</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="">
-<meta name="author" content="">
-
-<!-- Le styles -->
-<link href="<?php echo base_url().'public/'; ?>assets/css/bootstrap.css" rel="stylesheet">
-<style type="text/css">
-body {
-	padding-top: 60px;
-	padding-bottom: 40px;
-}
-.sidebar-nav {
-	padding: 9px 0;
-}
-</style>
-<link href="<?php echo base_url().'public/'; ?>assets/css/bootstrap-responsive.css" rel="stylesheet">
-<link href="<?php echo base_url().'public/'; ?>assets/css/prettify.css" rel="stylesheet">
-<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
-<!--[if lt IE 9]>
-      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-<!-- Le fav and touch icons -->
-<link rel="shortcut icon" href="assets/ico/favicon.ico">
-<link rel="apple-touch-icon-precomposed" sizes="144x144" href="<?php echo base_url().'public/'; ?>assets/ico/apple-touch-icon-144-precomposed.png">
-<link rel="apple-touch-icon-precomposed" sizes="114x114" href="<?php echo base_url().'public/'; ?>assets/ico/apple-touch-icon-114-precomposed.png">
-<link rel="apple-touch-icon-precomposed" sizes="72x72" href="<?php echo base_url().'public/'; ?>assets/ico/apple-touch-icon-72-precomposed.png">
-<link rel="apple-touch-icon-precomposed" href="<?php echo base_url().'public/'; ?>assets/ico/apple-touch-icon-57-precomposed.png">
-</head>
-<body>
-<div class="navbar navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container-fluid"> <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </a> <a class="brand" href="javascript:void(0)">Sutrixmedia <span>Admin Panel</span></a>
-      <div class="btn-group pull-right"> <a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)"> <i class="icon-user icon-white"></i> <?php echo $this->session->userdata('username');?> <span class="caret"></span> </a>
-        <ul class="dropdown-menu">
-          <li><a href="">Profile</a></li>
-          <li class="divider"></li>
-          <li><a href="<?php echo base_url().'index.php/login/log/logout'; ?>">Sign Out</a></li>
-        </ul>
-      </div>
-      <ul class="nav pull-right">
-        <li class="dropdown"> <a href="javascipt:void(0)" class="dropdown-toggle" data-toggle="dropdown">Dashboard<b class="caret"></b></a>
-          <ul class="dropdown-menu">
-            <li><a href="javascipt:void(0)">Update profile</a></li>
-            <?php if($this->session->userdata("permission")!=0)
-            {
-                
-                ?>
-                <li class="nav-header">Admin Dashboard</li>
-                <li><a href="">Create user</a></li>
-                <li><a href="<?php echo base_url().'index.php/manage/manage/index';?>">Manage user</a></li>
-                <?php
-            }?>
-          </ul>
-        </li>
-      </ul>
-    </div>
-  </div>
-</div>
-<div class="container">
-<div class="row">
-  <div class="span12">
-    <h1>Dashboard<small> Welcome to Sutrixmedia Panel</small></h1>
-    <hr/>
-    
-    <hr/>
-  </div>
-  </div>
-  <h2>User Edit</h2>
   <form class="form-horizontal well" method="post" action="">
-    <fieldset>
         <?php
             echo validation_errors();
             if(isset($error))
             {
               echo '<br />'.$error;
             }
+           // echo 'sdfsd';   
         ?>
       <div class="control-group">
-        <label class="control-label">User ID</label>
+        <label class="control-label"><?php echo $this->lang->line('user_id'); ?></label>
         <div class="controls">
             <input class="span3" type="text" value="<?php echo $this->session->userdata('userid'); ?>" disabled>
         </div>
       </div>
         <div class="control-group">
-        <label class="control-label">Username</label>
+        <label class="control-label"><?php echo $this->lang->line('username'); ?></label>
         <div class="controls">
-            <input class="span3" name="username" type="text" value="<?php echo isset($user->username)?$user->username:''; ?>" placeholder="Username">
+            <input class="span3" name="username" type="text" value="<?php echo isset($user->username)?$user->username:''; ?>" placeholder="<?php echo $this->lang->line('username'); ?>">
         </div>
         </div>
         <div class="control-group">
-        <label class="control-label">Password</label>
+        <label class="control-label"><?php echo $this->lang->line('password'); ?></label>
         <div class="controls">
-            <input class="span3" name="password" type="password" placeholder="Password">
+            <input class="span3" name="password" type="password" placeholder="<?php echo $this->lang->line('password'); ?>">
         </div>
       </div>
         <div class="control-group">
-        <label class="control-label">Re-enter password</label>
+        <label class="control-label"><?php echo $this->lang->line('repassword'); ?></label>
         <div class="controls">
-          <input class="span3" name="repassword" type="password" placeholder="Re-enter password">
+          <input class="span3" name="repassword" type="password" placeholder="<?php echo $this->lang->line('repassword'); ?>">
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label">Email</label>
+        <label class="control-label"><?php echo $this->lang->line('email'); ?></label>
         <div class="controls">
-            <input class="span3" name="email" type="text" value="<?php echo isset($user->email)?$user->email:''; ?>" placeholder="Email">
+            <input class="span3" name="email" type="text" value="<?php echo isset($user->email)?$user->email:''; ?>" placeholder="<?php echo $this->lang->line('email'); ?>">
         </div>
         </div>
       <div class="control-group">
-        <label class="control-label">Gender</label>
+        <label class="control-label"><?php echo $this->lang->line('gender'); ?></label>
         <div class="controls">
           <select class="span2" name="gender">
-            <option value="1">Male</option>
-            <option value="0">Female</option>
+            <option value="1"><?php echo $this->lang->line('male'); ?></option>
+            <option value="0"><?php echo $this->lang->line('famale'); ?></option>
           </select>
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label">Day of birth</label>
+        <label class="control-label"><?php echo $this->lang->line('dob'); ?></label>
         <div class="controls">
           <select class="span1" name="day">
-            <option value="0">Day</option>
+            <option value="0"><?php echo $this->lang->line('day'); ?></option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -158,7 +84,7 @@ body {
             <option value="31">31</option>
           </select>
           <select class="span1" name="month">
-            <option value="0">Month</option>
+            <option value="0"><?php echo $this->lang->line('month'); ?></option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -173,7 +99,7 @@ body {
             <option value="12">12</option>
           </select>
           <select class="span1" name="year">
-            <option value="0">Year</option>
+            <option value="0"><?php echo $this->lang->line('year'); ?></option>
             <option value="2005">2005</option>
             <option value="2004">2004</option>
             <option value="2003">2003</option>
@@ -238,7 +164,7 @@ body {
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label">Permission</label>
+        <label class="control-label"><?php echo $this->lang->line('permission'); ?></label>
         <div class="controls">
           <select class="span2" name="permission">
                 <option value="0">User</option>
@@ -251,29 +177,15 @@ body {
         </div>
       </div>
       <div class="control-group">
-        <label class="control-label">Status</label>
+        <label class="control-label"><?php echo $this->lang->line('status'); ?></label>
         <div class="controls">
           <select class="span2" name="status">
-            <option value="1">Public</option>
-            <option value="0">Private</option>
+            <option value="1"><?php echo $this->lang->line('public'); ?></option>
+            <option value="0"><?php echo $this->lang->line('private'); ?></option>
           </select>
         </div>
       <div class="form-actions">
-        <input type="submit" class="btn btn-primary" name="edit" value="Save changes" />
-        <input type="submit" class="btn" name="cancel" value="Cancel" />
+        <input type="submit" class="btn btn-primary" name="edit" value="<?php echo $this->lang->line('edit'); ?>" />
+        <input type="submit" class="btn" name="cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
       </div>
-    </fieldset>
-  </form>
-  <hr/>
-  <footer>
-    <p>&copy; SutrixMedia 2012</p>
-  </footer>
-</div>
-<!-- Le javascript
-    ================================================== --> 
-<!-- Placed at the end of the document so the pages load faster --> 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script> 
-<script src="<?php echo base_url().'public/'; ?>assets/js/bootstrap.min.js"></script> 
-<script src="<?php echo base_url().'public/'; ?>assets/js/prettify.js"></script>
-</body>
-</html>
+ </form>

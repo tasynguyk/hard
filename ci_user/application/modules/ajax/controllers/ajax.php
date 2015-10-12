@@ -134,9 +134,10 @@ class Ajax extends MX_Controller {
                     {
                         unlink('./uploads/'.$oldfile);
                     }
-                    $data['error'] = 'Complete';
+                    $data['error'] = $this->lang->line('compele');
                 }
-                $this->load->view('index_view',$data);
+                $data['page_content'] = $this->load->view('index_view',$data,true);
+                $this->load->view('master_layout',$data);
             }
             else
             {

@@ -22,8 +22,19 @@ class Log extends MX_Controller {
             $this->load->library('form_validation');
             $this->load->database();
             $this->load->helper(array('form', 'url'));
+            if($this->session->userdata('lang'))
+            {
+                $lang_use = $this->session->userdata('lang');
+                $this->lang->load('form',$lang_use);
+            }
+            else
+            {
+                $this->lang->load('form','vietnamese');
+            }
         }
-         
+        
+        
+        
 	public function index()
 	{
             if($this->session->userdata("islogin"))
@@ -52,7 +63,7 @@ class Log extends MX_Controller {
                             redirect(base_url().'index.php/login/log/profile', 'location');
                         }
                         else
-                        {
+                        {//sua error
                             $data['error'] = 'Invalid username or password.';
                             $this->load->view('login_view',$data);
                         }
@@ -73,8 +84,10 @@ class Log extends MX_Controller {
         {
             if($this->session->userdata('islogin')==1)
             {
+                $this->lang->load('form','vietnamese');
                 $data['username'] = $this->session->userdata('username');
-                $this->load->view('profile_view',$data);
+                $data['page_content'] = $this->load->view('profile_view',$data,true);
+                $this->load->view('master_layout', $data);
             }
             else
             {

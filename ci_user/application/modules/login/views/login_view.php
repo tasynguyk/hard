@@ -26,7 +26,7 @@
   <body>
     <form class="form-horizontal form-login" action="<?php echo base_url().'index.php/login/log/index'; ?>" method="post">
         <fieldset>
-        <legend>System Login</legend>
+        <legend><?php echo $this->lang->line('systemlogin'); ?></legend>
         <?php 
             echo validation_errors();
             echo isset($error)?$error:'';
@@ -47,7 +47,7 @@
         </div>                 
       </fieldset>
       <div class="form-actions">
-          <button type="submit" class="btn btn-primary" name="login" value="Login" data-loading-text="loading..." id="form-login-btnLogin">Login</button>
+          <button type="submit" class="btn btn-primary" name="login" value="Login" data-loading-text="loading..." id="form-login-btnLogin"><?php echo $this->lang->line('login'); ?></button>
       </div>      
     </form>
     <script src="<?php echo base_url().'public/'; ?>assets/js/jquery-1.7.2.min.js"></script>    

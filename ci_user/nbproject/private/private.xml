@@ -12,15 +12,19 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/var/www/html/ci_user/application/modules/manage/controllers/manage.php</file>
             <file>file:/var/www/html/ci_user/application/modules/upload/controllers/upload.php</file>
-            <file>file:/var/www/html/ci_user/application/modules/login/views/profile_view.php</file>
-            <file>file:/var/www/html/ci_user/application/modules/admin/views/create_view.php</file>
             <file>file:/var/www/html/ci_user/application/modules/upload/views/upload_view.php</file>
-            <file>file:/var/www/html/ci_user/application/modules/admin/controllers/create.php</file>
-            <file>file:/var/www/html/ci_user/application/modules/login/views/login_view.php</file>
-            <file>file:/var/www/html/ci_user/application/modules/login/controllers/log.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/ajax/controllers/ajax.php</file>
             <file>file:/var/www/html/ci_user/application/modules/manage/views/edit_view.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/manage/models/page_model.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/admin/models/user_model.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/manage/controllers/manage.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/admin/views/create_view.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/manage/views/pdf_view.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/login/controllers/log.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/ajax/views/index_view.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/admin/models/time_model.php</file>
+            <file>file:/var/www/html/ci_user/application/modules/manage/models/user_model.php</file>
             <file>file:/var/www/html/ci_user/application/modules/manage/views/list_view.php</file>
         </group>
     </open-files>

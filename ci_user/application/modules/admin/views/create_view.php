@@ -1,103 +1,185 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="utf-8">
-	<title>Welcome to CodeIgniter</title>
-
-	<style type="text/css">
-
-	::selection{ background-color: #E13300; color: white; }
-	::moz-selection{ background-color: #E13300; color: white; }
-	::webkit-selection{ background-color: #E13300; color: white; }
-
-	body {
-		background-color: #fff;
-		margin: 40px;
-		font: 13px/20px normal Helvetica, Arial, sans-serif;
-		color: #4F5155;
-	}
-
-	a {
-		color: #003399;
-		background-color: transparent;
-		font-weight: normal;
-	}
-
-	h1 {
-		color: #444;
-		background-color: transparent;
-		border-bottom: 1px solid #D0D0D0;
-		font-size: 19px;
-		font-weight: normal;
-		margin: 0 0 14px 0;
-		padding: 14px 15px 10px 15px;
-	}
-
-	code {
-		font-family: Consolas, Monaco, Courier New, Courier, monospace;
-		font-size: 12px;
-		background-color: #f9f9f9;
-		border: 1px solid #D0D0D0;
-		color: #002166;
-		display: block;
-		margin: 14px 0 14px 0;
-		padding: 12px 10px 12px 10px;
-	}
-
-	#body{
-		margin: 0 15px 0 15px;
-	}
-	
-	p.footer{
-		text-align: right;
-		font-size: 11px;
-		border-top: 1px solid #D0D0D0;
-		line-height: 32px;
-		padding: 0 10px 0 10px;
-		margin: 20px 0 0 0;
-	}
-	
-	#container{
-		margin: 10px;
-		border: 1px solid #D0D0D0;
-		-webkit-box-shadow: 0 0 8px #D0D0D0;
-	}
-	</style>
-</head>
-<body>
-<div style="margin-top: 15px;">
-    <table>
-        <b>Create user (<a href="<?php echo base_url().'index.php/manage/manage';?>">Users list</a>)
-            <a href="<?php echo base_url().'index.php/login/log/profile'; ?>">Profile</a>
-        </b><br/>
-        <?php 
+<form class="form-horizontal well" method="post" action="">
+        <?php
             echo validation_errors();
             if(isset($error))
-                echo $error;
+            {
+              echo '<br />'.$error;
+            }
         ?>
-        <form action="" method="post">
-            <tr>
-                <td>Username</td>
-                <td><input type="text" name="username" /></td>
-            </tr>
-            <tr>
-                <td>Password</td>
-                <td><input type="password" name="password" /></td>
-            </tr>
-            <tr>
-                <td>Re-enter password</td>
-                <td><input type="password" name="repassword" /></td>
-            </tr>
-            <tr>
-                <td>Email</td>
-                <td><input type="text" name="email" /></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td><input type="submit" name="create" value="Create user" /></td>
-            </tr>
-        </form>
-    </table>
-</div>
-</body>
-</html>
+        <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('username'); ?></label>
+        <div class="controls">
+            <input class="span3" name="username" type="text" value="<?php echo isset($user->username)?$user->username:''; ?>" placeholder="<?php echo $this->lang->line('username'); ?>">
+        </div>
+        </div>
+        <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('password'); ?></label>
+        <div class="controls">
+            <input class="span3" name="password" type="password" placeholder="<?php echo $this->lang->line('password'); ?>">
+        </div>
+      </div>
+        <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('repassword'); ?></label>
+        <div class="controls">
+          <input class="span3" name="repassword" type="password" placeholder="<?php echo $this->lang->line('repassword'); ?>">
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('email'); ?></label>
+        <div class="controls">
+            <input class="span3" name="email" type="text" value="<?php echo isset($user->email)?$user->email:''; ?>" placeholder="<?php echo $this->lang->line('email'); ?>">
+        </div>
+        </div>
+      <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('gender'); ?></label>
+        <div class="controls">
+          <select class="span2" name="gender">
+            <option value="1"><?php echo $this->lang->line('male'); ?></option>
+            <option value="0"><?php echo $this->lang->line('famale'); ?></option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('dob'); ?></label>
+        <div class="controls">
+          <select class="span1" name="day">
+            <option value="0"><?php echo $this->lang->line('day'); ?></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+            <option value="13">13</option>
+            <option value="14">14</option>
+            <option value="15">15</option>
+            <option value="16">16</option>
+            <option value="17">17</option>
+            <option value="18">18</option>
+            <option value="19">19</option>
+            <option value="20">20</option>
+            <option value="21">21</option>
+            <option value="22">22</option>
+            <option value="23">23</option>
+            <option value="24">24</option>
+            <option value="25">25</option>
+            <option value="26">26</option>
+            <option value="27">27</option>
+            <option value="28">28</option>
+            <option value="29">29</option>
+            <option value="30">30</option>
+            <option value="31">31</option>
+          </select>
+          <select class="span1" name="month">
+            <option value="0"><?php echo $this->lang->line('month'); ?></option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          <select class="span1" name="year">
+            <option value="0"><?php echo $this->lang->line('year'); ?></option>
+            <option value="2005">2005</option>
+            <option value="2004">2004</option>
+            <option value="2003">2003</option>
+            <option value="2002">2002</option>
+            <option value="2001">2001</option>
+            <option value="2000">2000</option>
+            <option value="0">------</option>
+            <option value="1999">1999</option>
+            <option value="1998">1998</option>
+            <option value="1997">1997</option>
+            <option value="1996">1996</option>
+            <option value="1995">1995</option>
+            <option value="1994">1994</option>
+            <option value="1993">1993</option>
+            <option value="1992">1992</option>
+            <option value="1991">1991</option>
+            <option value="1990">1990</option>
+            <option value="0">------</option>
+            <option value="1989">1989</option>
+            <option value="1988">1988</option>
+            <option value="1987">1987</option>
+            <option value="1986">1986</option>
+            <option value="1985">1985</option>
+            <option value="1984">1984</option>
+            <option value="1983">1983</option>
+            <option value="1982">1982</option>
+            <option value="1981">1981</option>
+            <option value="1980">1980</option>
+            <option value="0">------</option>
+            <option value="1979">1979</option>
+            <option value="1978">1978</option>
+            <option value="1977">1977</option>
+            <option value="1976">1976</option>
+            <option value="1975">1975</option>
+            <option value="1974">1974</option>
+            <option value="1973">1973</option>
+            <option value="1972">1972</option>
+            <option value="1971">1971</option>
+            <option value="1970">1970</option>
+            <option value="0">------</option>
+            <option value="1969">1969</option>
+            <option value="1968">1968</option>
+            <option value="1967">1967</option>
+            <option value="1966">1966</option>
+            <option value="1965">1965</option>
+            <option value="1964">1964</option>
+            <option value="1963">1963</option>
+            <option value="1962">1962</option>
+            <option value="1961">1961</option>
+            <option value="1960">1960</option>
+            <option value="0">------</option>
+            <option value="1959">1959</option>
+            <option value="1958">1958</option>
+            <option value="1957">1957</option>
+            <option value="1956">1956</option>
+            <option value="1955">1955</option>
+            <option value="1954">1954</option>
+            <option value="1953">1953</option>
+            <option value="1952">1952</option>
+            <option value="1951">1951</option>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('permission'); ?></label>
+        <div class="controls">
+          <select class="span2" name="permission">
+                <option value="0">User</option>
+                <option value="1">Admin</option>
+            <?php if($this->session->userdata('permission')>1)
+          {?>
+                <option value="2">Super admin</option>
+          <?php } ?>
+          </select>
+        </div>
+      </div>
+      <div class="control-group">
+        <label class="control-label"><?php echo $this->lang->line('status'); ?></label>
+        <div class="controls">
+          <select class="span2" name="status">
+            <option value="1"><?php echo $this->lang->line('public'); ?></option>
+            <option value="0"><?php echo $this->lang->line('private'); ?></option>
+          </select>
+        </div>
+      <div class="form-actions">
+        <input type="submit" class="btn btn-primary" name="create" value="<?php echo $this->lang->line('create'); ?>" />
+        <input type="submit" class="btn" name="cancel" value="<?php echo $this->lang->line('cancel'); ?>" />
+      </div>
+ </form>
+

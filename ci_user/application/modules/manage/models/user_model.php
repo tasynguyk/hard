@@ -10,9 +10,43 @@ class user_model extends CI_Model
     
     function get_list_user($id, $permisson, $page, $order)
     {
-        $q = $this->db->query("select * from user where id<>'$id' and "
-                . "permission<$permisson order by $order limit $page,3");
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+                . "from user, company where user.id<>'$id' and "
+                . "permission<$permisson and user.companyid=company.id order by $order limit $page,3");
         return $q->result();
+    }
+    
+    function get_listuser_nopage($id, $permisson, $order)
+    {
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+                . "from user, company where user.id<>'$id' and "
+                . "permission<$permisson and user.companyid=company.id order by $order");
+        return $q->result();
+    }
+    
+    
+    function search_user_nopage($id, $permisson,  $order, $search)
+    {
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+                . "from user, company where user.id<>'$id' and username like '%$search%' and "
+                . "permission<$permisson and user.companyid=company.id order by $order");
+        return $q->result();
+    }
+    
+    function search_user($id, $permisson, $page, $order, $search)
+    {
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+                . "from user, company where user.id<>'$id' and username like '%$search%' and "
+                . "permission<$permisson and user.companyid=company.id order by $order limit $page,3");
+        return $q->result();
+    }
+    
+    function search_numrow_user($id, $permisson, $search)
+    {
+        $q = $this->db->query("select * from user where id<>'$id' and "
+                . "permission<$permisson and username like '%$search%'");
+        
+        return $q->num_rows();
     }
     
     function  get_user_byid($id)
@@ -47,7 +81,8 @@ class user_model extends CI_Model
             return true;
         }
     }
-
+    
+    
     function edit_user_byid($data, $id)
     {
         $this->db->where('id',$id);

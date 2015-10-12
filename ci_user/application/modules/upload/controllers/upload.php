@@ -56,6 +56,7 @@ class Upload extends MX_Controller {
                             rename($old, $new);
                             $data['error'] = 'Complete';
                         }
+                        echo $res['file_path'];
                         $this->load->view('upload_view',$data);
                 }
                 else

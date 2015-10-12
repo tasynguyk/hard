@@ -49,6 +49,7 @@ body {
             <li><a href="javascipt:void(0)">Update profile</a></li>
             <?php if($this->session->userdata("permission")!=0)
             {
+                
                 ?>
                 <li class="nav-header">Admin Dashboard</li>
                 <li><a href="">Create user</a></li>
@@ -113,7 +114,7 @@ body {
       <div class="control-group">
         <label class="control-label">Gender</label>
         <div class="controls">
-          <select class="span1">
+          <select class="span2" name="gender">
             <option value="1">Male</option>
             <option value="0">Female</option>
           </select>
@@ -239,10 +240,10 @@ body {
       <div class="control-group">
         <label class="control-label">Permission</label>
         <div class="controls">
-          <select class="span1">
+          <select class="span2" name="permission">
                 <option value="0">User</option>
                 <option value="1">Admin</option>
-            <?php if($this->session->userdata('permisson')>1)
+            <?php if($this->session->userdata('permission')>1)
           {?>
                 <option value="2">Super admin</option>
           <?php } ?>
@@ -252,9 +253,9 @@ body {
       <div class="control-group">
         <label class="control-label">Status</label>
         <div class="controls">
-          <select class="span1">
-            <option>Public</option>
-            <option>Private</option>
+          <select class="span2" name="status">
+            <option value="1">Public</option>
+            <option value="0">Private</option>
           </select>
         </div>
       <div class="form-actions">

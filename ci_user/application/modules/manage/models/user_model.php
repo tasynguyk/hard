@@ -8,11 +8,25 @@ class user_model extends CI_Model
         parent::__construct();
     }
     
+    public function get_lang()
+    {
+        if($this->session->userdata('lang'))
+        {
+            if($this->session->userdata('lang')=='english')
+            {
+                return 'en_name';
+            }
+            return 'vi_name';
+        }
+        return 'en_name';
+    }
+            
     function get_list_user($id, $permisson, $page, $order)
     {
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+        $lang_use = $this->get_lang();
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
                 . "from user, company where user.id<>'$id' and "
-                . "permission<$permisson and user.companyid=company.id order by $order limit $page,3");
+                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
         return $q->result();
     }
     
@@ -35,9 +49,10 @@ class user_model extends CI_Model
     
     function search_user($id, $permisson, $page, $order, $search)
     {
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
+        $lang_use = $this->get_lang();
+        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
                 . "from user, company where user.id<>'$id' and username like '%$search%' and "
-                . "permission<$permisson and user.companyid=company.id order by $order limit $page,3");
+                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
         return $q->result();
     }
     

@@ -88,6 +88,7 @@ class Log extends MX_Controller {
             {
                 $this->lang->load('form','vietnamese');
                 $data['username'] = $this->session->userdata('username');
+                $data['page_title'] = 'Sutrixmedia | '.$this->lang->line('profile');
                 $data['page_content'] = $this->load->view('profile_view',$data,true);
                 $this->load->view('master_layout', $data);
             }

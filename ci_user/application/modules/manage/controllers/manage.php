@@ -19,7 +19,7 @@ class Manage extends MX_Controller {
 	 */
          public function __construct() {
             parent::__construct();
-            $this->load->library('form_validation');
+            $this->load->library(array('form_validation','Acl'));
             $this->load->database();
             $this->load->helper(array('form', 'url','date','download','file'));
             if($this->session->userdata('lang'))
@@ -42,7 +42,9 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $resource = 1;
+                $user_id = $this->session->userdata('id');
+                if(!$this->acl->can_view($user_id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
@@ -139,16 +141,8 @@ class Manage extends MX_Controller {
                         }
                         
                     }
-                    $this->load->library('pagination');
-                    
-                    
                     $this->load->model('user_model');
                     $data['list'] = $list;
-                    
-                    $config['total_rows'] = $num_rows;
-                    $config['base_url'] = base_url()."index.php/manage/manage/index";
-                    $config['per_page'] = 3;
-                    $config['use_page_numbers'] = TRUE;
                     //$config['next_link'] = 'Next';
                     
                     $z['total_row'] = $num_rows;
@@ -157,14 +151,13 @@ class Manage extends MX_Controller {
                     $z['curpage'] = $curpage;
                     $this->load->model('page_model');
                     
-                    $this->pagination->initialize($config);
                     
                     $data["pagination"] =  $this->page_model->create_page($z);
                   //  $data['sortby'] = $order;
                     
                     $data['page_content'] = $this->load->view('list_view',$data,true);
                     $data['page_sub_title'] = $this->lang->line('manage_user');
-                    $data['page_title'] = "Sutrix media | Manage user";
+                    $data['page_title'] = "Sutrix media | ".$this->lang->line('manage_user');
                     $data['page_js'] = $this->load->view('js/edit_js_view');
                     $this->load->view('master_layout', $data);
                     
@@ -333,7 +326,8 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $id = $this->session->userdata('id');
+                if(!$this->acl->can_view($id, 1))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
@@ -358,19 +352,19 @@ class Manage extends MX_Controller {
                             redirect(base_url().'index.php/manage/manage/manage', 'location');
                         }
                         else {
+                            $this->load->model('company_model');
                             if(!$this->input->post('edit'))
                             {
                                 $this->load->model('user_model');
                                 $data['user'] = $this->user_model->get_user_byid($id);
-                                $data['page_content'] = $this->load->view('edit_view',$data,true);
                                // $this->load->view('master_layout',$data);
                             }
                             else 
                             {
-                                    $this->form_validation->set_rules('username','Username','trim|required');
-                                    $this->form_validation->set_rules('password','Password','trim|required');
-                                    $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
-                                    $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+                                    $this->form_validation->set_rules('username',$this->lang->line('username'),'trim|required');
+                                    $this->form_validation->set_rules('password',$this->lang->line('password'),'trim|required');
+                                    $this->form_validation->set_rules('repassword',$this->lang->line('repassword'),'trim|required|matches[password]');
+                                    $this->form_validation->set_rules('email',$this->lang->line('email'),'trim|required|valid_email');
                                     if($this->form_validation->run()==FALSE)
                                     {
                                         $data['page_content'] = $this->load->view('edit_view','',true);
@@ -386,7 +380,6 @@ class Manage extends MX_Controller {
                                         if(!$this->time_model->check_time($day,$month,$year))
                                         {
                                             $data['error'] = 'Day of birth valid';
-                                            $data['page_content'] = $this->load->view('edit_view', $data,true);
                                         }
                                         else
                                         {
@@ -397,10 +390,10 @@ class Manage extends MX_Controller {
                                             $gender = $this->input->post('gender');
                                             $permission = $this->input->post('permission');
                                             $status = $this->input->post('status');
+                                            $companyid = $this->input->post('companyid');
                                             if(!$this->user_model->check_user_edit($id, $username, $email))
                                             {
                                                 $data['error'] = $this->lang->line('username_email_use');
-                                                $data['page_content'] = $this->load->view('edit_view',$data,true);
                                             }
                                             else
                                             {
@@ -412,7 +405,8 @@ class Manage extends MX_Controller {
                                                 'gender' => $gender,
                                                 'permission' => $permission,
                                                 'status' => $status,
-                                                'dob' => $dob
+                                                'dob' => $dob,
+                                                'companyid' => $companyid
                                                 );
                                                 //print_r($update);
                                                 $this->user_model->edit_user_byid($update, $id);
@@ -423,8 +417,10 @@ class Manage extends MX_Controller {
                                         }
                                     }
                             }
-                            $data['page_title'] = '';
-                            $data['page_sub_title'] = $this->lang->line('create_user');
+                            $data['list_company'] = $this->company_model->get_company_list();
+                            $data['page_title'] = $data['page_title'] = "Sutrix media | ".$this->lang->line('edit_user');
+                            $data['page_sub_title'] = $this->lang->line('edit_user');
+                            $data['page_content'] = $this->load->view('edit_view',$data,true);
                             $this->load->view('master_layout',$data);
                         }
                     }
@@ -436,7 +432,7 @@ class Manage extends MX_Controller {
             }
         }
         
-        public function edit()
+        public function company_edit()
         {
             if(!$this->session->userdata('islogin'))
             {
@@ -444,73 +440,157 @@ class Manage extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')!=1)
+                $id_user = $this->session->userdata('id');
+                if(!$this->acl->can_view($id_user, 2))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
                 else
                 {
-                    if($this->session->userdata('idedit'))
+                    if($this->input->post('cancel'))
                     {
-                        $id = $this->session->userdata('idedit');
-                        $q = $this->db->query("select * from user where id='$id'");
-                        $user = $q->row();
-                        $data['user'] = $user;
-                        if($this->input->post('edit'))
+                        $this->session->unset_userdata('companyid');
+                        $this->session->unset_userdata('companychoose');
+                        redirect(base_url().'index.php/manage/manage/company', 'location');
+                    }
+                    if($this->session->userdata('companyid'))
+                    {
+                        $this->load->model("company_model");
+                        
+                        
+                        $choose = $this->session->userdata('companychoose');
+                        $id = $this->session->userdata('companyid');
+                        if($choose == 'delete' && $this->acl->can_delete($id_user, 2))
                         {
-                            $this->form_validation->set_rules('username','Username','trim|required');
-                            $this->form_validation->set_rules('password','Password','trim|required');
-                            $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
-                            $this->form_validation->set_rules('email','Email','trim|required|valid_email');
-                            if($this->form_validation->run()==FALSE)
+                            if($this->company_model->check_delete_company($id))
                             {
-                                $this->load->view('edit_view',$data);
+                                    $this->company_model->delete_company($id);
                             }
-                            else
-                            {
-                                $username = $this->input->post('username');
-                                $email = $this->input->post('email');
-                                $password = md5($this->input->post('password'));
-                                
-                                $q1 = $this->db->query("select * from user where username='$username' and id <>'$id'");
-                                $q2 = $this->db->query("select * from user where email='$email' and id <>'$id'");
-                               // echo $q1->num_row()
-                                if($q1->num_rows()+$q2->num_rows()>0)
-                                {
-                                    $data['error'] = 'Username or email has been used';
-                                    $this->load->view('edit_view',$data);
-                                }
-                                else
-                                {
-                                    $update = array(
-                                    'username' => $username,
-                                    'password' => $password,
-                                    'email' => $email
-                                    );
-                                    $this->db->where('id',$id);
-                                    $this->db->update('user',$update);
-                                    redirect(base_url().'index.php/manage/manage/manage', 'location');
-                                }
-                                
-                            }
+                            redirect(base_url().'index.php/manage/manage/company', 'location');
                         }
                         else {
-                            if($this->input->post('cancel'))
+                            if($this->input->post('edit'))
                             {
-                                $this->session->unset_userdata('idedit');
-                                redirect(base_url().'index.php/manage/manage/manage', 'location');
+                                if($this->input->post('edit') && $this->acl->can_edit($id_user, 2))
+                                {
+                                    $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
+                                    $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
+                                    if($this->form_validation->run()!=FALSE)
+                                    {
+                                        $en_name = $this->input->post('en_name');
+                                        $vi_name = $this->input->post('vi_name');
+                                        
+                                        if(!$this->company_model->check_company($en_name, $vi_name, $id))
+                                        {
+                                            $data['error'] = $this->lang->line('company_name_use');
+                                        }
+                                        else
+                                        {
+                                            $info = array(
+                                              'vi_name' => $vi_name,
+                                              'en_name' => $en_name
+                                            );
+                                            $this->company_model->update_company($id, $info);
+                                            $data['error'] = $this->lang->line('compele');
+                                        }
+                                    }
+                                }
                             }
-                            else
-                            {
-                                $this->load->view('edit_view',$data);
-                                
-                            }
+                            $data['company'] = $this->company_model->get_company_byid($id);
+                            $data['list_company'] = $this->company_model->get_company_list();
+                            $data['page_title'] = $data['page_title'] = "Sutrix media | ".$this->lang->line('edit_company');
+                            $data['page_sub_title'] = $this->lang->line('edit_company');
+                            $data['page_content'] = $this->load->view('edit_company_view',$data,true);
+                            $this->load->view('master_layout',$data);
                         }
+                    }
+                    else {
+                       // redirect(base_url().'index.php/manage/manage/manage', 'location');
+                    }
+                    
+                }
+            }
+        }
+        
+        public function company($page = "1")
+        {
+            if(!$this->session->userdata('islogin'))
+            {
+                redirect(base_url().'index.php/login/log', 'location');
+            }
+            else
+            {
+                $resource = 2;
+                $user_id = $this->session->userdata('id');
+                if(!$this->acl->can_view($user_id, $resource))
+                {
+                    redirect(base_url().'index.php/login/log/profile', 'location');
+                }
+                else
+                {
+                    $curpage = $page;
+                    $page = (($page-1)*3);
+                    if($this->input->post('companyid'))
+                    {
+                        $this->session->set_userdata('companyid',$this->input->post('companyid'));
+                        $this->session->set_userdata('companychoose',$this->input->post('companychoose'));
+                        redirect(base_url().'index.php/manage/manage/company_edit', 'location');
+                        
+                    }
+                    
+                    $this->load->model('company_model');
+                    
+                    
+                    
+                    
+                    if($this->input->post('btncancel'))
+                    {
+                        $this->session->unset_userdata('company_search');
+                        redirect(base_url().'index.php/manage/manage/company', 'location');
+                    }
+                    if($this->input->post('btnsearch'))
+                    {
+                        $search = $this->input->post('txtsearch');
+                        
+                        $this->session->set_userdata('company_search',$search);
+                        $list = $this->company_model->search_company($page, $search);
+                            $num_rows = $this->company_model->search_numrows_company($search);
                     }
                     else
                     {
-                        redirect(base_url().'index.php/manage/manage/manage', 'location');
+                        if($this->session->userdata('company_search'))
+                        {
+                            $search = $this->session->userdata('company_search');
+                            $list = $this->company_model->search_company($page, $search);
+                            $num_rows = $this->company_model->search_numrows_company($search);
+                            
+                        }
+                        else
+                        {
+                            $list = $this->company_model->get_company($page);
+                            $num_rows = $this->company_model->get_num_company();
+                        }
+                        
                     }
+                    
+                    $data['list'] = $list;
+                    $data['page_sub_title'] = $this->lang->line('manage_company');
+                    
+                    
+                    $z['total_row'] = $num_rows;
+                    $z['item_per_page'] = 3;
+                    $z['url'] = base_url()."index.php/manage/manage/company";
+                    $z['curpage'] = $curpage;
+                    $this->load->model('page_model');
+                    
+                    $data["pagination"] =  $this->page_model->create_page($z);
+                   
+                    $data['page_title'] = "Sutrix media | ".$this->lang->line('manage_company');
+                    $data['page_js'] = $this->load->view('js/company_js_view');
+                    
+                    $data['page_content'] = $this->load->view('company_view',$data,true);
+                    $this->load->view('master_layout', $data);
+                    
                 }
             }
         }

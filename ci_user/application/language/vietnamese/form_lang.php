@@ -22,6 +22,7 @@ $lang['edit'] = 'Chỉnh sửa';
 $lang['delete'] = 'Xóa';
 $lang['dob_valid'] = 'Ngày sinh sai định dạng.';
 $lang['company'] = 'Công ty';
+$lang['edit_user'] = 'Chỉnh sửa người dùng';
 
 $lang['username_email_used'] = 'Tên đăng nhập hoặc email đã được sử dụng.';
 $lang['username_pass_valid'] = 'Tên đăng nhập hoặc mật khẩu không chính xác.';
@@ -53,3 +54,34 @@ $lang['sort'] = 'Sắp xếp';
 $lang['search'] = 'Tìm kiếm';
 $lang['sort_by'] = 'Sắp xếp theo';
 $lang['search_for'] = 'Tìm kiếm theo';
+
+
+$lang['theme'] = 'Giao diện';
+$lang['theme_default'] = 'Mặc định';
+$lang['theme_green'] = 'Xanh lá';
+$lang['theme_pink'] = 'Hồng';
+$lang['theme_gray'] = 'Xám';
+
+$lang['company_name'] = 'Tên công ty';
+$lang['manage_company'] = 'Quản lý công ty';
+$lang['create_company'] = 'Tạo công ty';
+$lang['company_name_en'] = 'Tên công ty tiếng Anh';
+$lang['company_name_vi'] = 'Tên công ty tiếng Việt';
+$lang['company_name_use'] = 'Tên công ty đã được sử dụng.';
+$lang['edit_company'] = 'Chỉnh sửa công ty';
+
+$lang['groupname'] = 'Tên nhóm';
+$lang['description'] = 'Mô tả';
+$lang['manage_group'] = 'Quản lý nhóm';
+$lang['create_group'] = 'Tạo nhóm';
+$lang['groupname_use'] = 'Tên nhóm đã được sử dụng.';
+$lang['edit_group'] = 'Chỉnh sửa nhóm';
+
+$lang['manage_member'] = 'Quản lý thành viên';
+$lang['manage_permission'] = 'Quản lý quyền';
+$lang['delete_from_group'] = 'Xóa khỏi nhóm';
+$lang['free_user'] = 'Người dùng tự do';
+$lang['add_to_group'] ='Thêm vào nhóm';
+$lang['delete_permission'] = 'Xóa phân quyền';
+$lang['edit_permission'] = 'Chỉnh sửa phân quyền';
+$lang['resource'] = 'Tài nguyên';

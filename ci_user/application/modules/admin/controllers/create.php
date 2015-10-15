@@ -19,7 +19,7 @@ class Create extends MX_Controller {
 	 */
          public function __construct() {
             parent::__construct();
-            $this->load->library('form_validation');
+            $this->load->library(array('form_validation','Acl'));
             $this->load->database();
             $this->load->helper(array('form', 'url'));
             if($this->session->userdata('lang'))
@@ -42,20 +42,25 @@ class Create extends MX_Controller {
             }
             else
             {
-                if($this->session->userdata('permission')<1)
+                $id = $this->session->userdata('id');
+                $resource = 1;
+                if(!$this->acl->can_create($id, $resource))
                 {
                     redirect(base_url().'index.php/login/log/profile', 'location');
                 }
                 else
                 {
                     $this->load->model('user_model');
+                    $this->load->model('company_model');
+                    
+                  //  $data[]
                     
                     if($this->input->post('create'))
                     {
-                        $this->form_validation->set_rules('username','Username','trim|required');
-                        $this->form_validation->set_rules('password','Password','trim|required');
-                        $this->form_validation->set_rules('repassword','Re-enter password','trim|required|matches[password]');
-                        $this->form_validation->set_rules('email','Email','trim|required|valid_email');
+                        $this->form_validation->set_rules('username',$this->lang->line('username'),'trim|required');
+                        $this->form_validation->set_rules('password',$this->lang->line('password'),'trim|required');
+                        $this->form_validation->set_rules('repassword',$this->lang->line('repassword'),'trim|required|matches[password]');
+                        $this->form_validation->set_rules('email',$this->lang->line('email'),'trim|required|valid_email');
                         if($this->form_validation->run()==FALSE)
                         {
                             $data['page_content'] = $this->load->view('create_view','',true);
@@ -70,7 +75,7 @@ class Create extends MX_Controller {
                             
                             if(!$this->time_model->check_time($day,$month,$year))
                             {
-                                $data['error'] = 'Day of birth valid';
+                                $data['error'] = $this->lang->line('dob_valid');
                                 $data['page_content'] = $this->load->view('create_view',$data,true);
                             }
                             else
@@ -81,9 +86,10 @@ class Create extends MX_Controller {
                                 $gender = $this->input->post('gender');
                                 $permission = $this->input->post('permisson');
                                 $status = $this->input->post('status');
+                                $companyid = $this->input->post('companyid');
                                 if(!$this->user_model->check_user($username, $email))
                                 {
-                                    $data['error'] = 'Username or email has been used';
+                                    $data['error'] = $this->lang->line('username_email_use');
                                     $data['page_content'] = $this->load->view('create_view',$data,true);
                                 }
                                 else 
@@ -96,11 +102,11 @@ class Create extends MX_Controller {
                                         'gender' => $gender,
                                         'permission' => $permission,
                                         'status' => $status,
-                                        'dob' => $dob
+                                        'dob' => $dob,
+                                        'companyid' => $companyid
                                     );
                                     $this->user_model->add_user($create);
                                     $data['error'] = 'Complete.';
-                                    $data['page_content'] = $this->load->view('create_view',$data,true);
                                 }
                                 //data['page_title'] =  
                                 $data['page_sub_title'] = $this->lang->line('create_user');
@@ -108,14 +114,60 @@ class Create extends MX_Controller {
                         }
                         
                     }
-                    else {
-                        $data['page_sub_title'] = $this->lang->line('create_user');
-                        $data['page_content'] = $this->load->view('create_view','',true);
-                    }
+                    $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_user');
+                    $data['list_company'] = $this->company_model->get_company();
+                    $data['page_sub_title'] = $this->lang->line('create_user');
+                    $data['page_content'] = $this->load->view('create_view',$data,true);
                     $this->load->view('master_layout',$data);
                 }
             }
 	}
+
+
+
+        public function company()
+        {
+            if(!$this->session->userdata('islogin'))
+            {
+                redirect(base_url().'index.php/login/log','location');
+            }
+            else
+            {
+                $id = $this->session->userdata('id');
+                $resource = 2;
+                if(!$this->acl->can_create($id, $resource))
+                {
+                    redirect(base_url().'index.php/login/log/profile', 'location');
+                }
+                else
+                {
+                    $this->load->model('company_model');
+                    if($this->input->post('create'))
+                    {
+                        $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
+                        $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
+                        if($this->form_validation->run()!=FALSE)
+                        {
+                            $en_name = $this->input->post('en_name');
+                            $vi_name = $this->input->post('vi_name');
+                            if(!$this->company_model->check_name_company($en_name, $vi_name))
+                            {
+                                $data['error'] = $this->lang->line('company_name_use');
+                            }
+                            else
+                            {
+                                $this->company_model->insert_company($en_name, $vi_name);
+                                $data['error'] = $this->lang->line('compele');
+                            }
+                        }
+                    }
+                    $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_company');
+                    $data['page_sub_title'] = $this->lang->line('create_company');
+                    $data['page_content'] = $this->load->view('create_company_view',$data,true);
+                    $this->load->view('master_layout',$data);
+                }
+            }
+        }
        
 }
 

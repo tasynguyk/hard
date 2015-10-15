@@ -12,10 +12,10 @@
        <input type="hidden" name="choose" id="choose" />
       <input type="hidden" name="userid" id="userid" />
       <select class="span2" name="sortby">
-        <option value="username">Username</option>
-        <option>Birthday</option>
-        <option value="email">Email</option>
-        <option value="permission">Permission</option>
+        <option value="username"><?php echo $this->lang->line('username'); ?></option>
+        <option><?php echo $this->lang->line('birthday'); ?></option>
+        <option value="email"><?php echo $this->lang->line('email'); ?></option>
+        <option value="permission"><?php echo $this->lang->line('permission'); ?></option>
       </select>
   <button type="submit" class="btn btn-primary" name="sort" value="Sort" data-loading-text="loading..." id="form-login-btnLogin"><?php echo  $this->lang->line('sort');?></button>
   <input type="text" name="txtsearch" placeholder="<?php echo  $this->lang->line('search');?>" />
@@ -85,8 +85,24 @@
         </td>
         <td><?php echo $l->name; ?></td>
         <td>
-            <input type="button" value="<?php echo $this->lang->line('delete');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'delete')" />
-            <input type="button" value="<?php echo $this->lang->line('edit');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'edit')" />
+            <?php
+                $id = $this->session->userdata('id');
+                if($this->acl->can_delete($id,1))
+                {
+                    ?>
+                    <input type="button" value="<?php echo $this->lang->line('delete');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'delete')" />
+                    <?php
+                }
+            ?>
+            <?php
+                $id = $this->session->userdata('id');
+                if($this->acl->can_edit($id,1))
+                {
+                    ?>
+                    <input type="button" value="<?php echo $this->lang->line('edit');?>" class="btn btn-primary btn-small" onclick="get(<?php echo $l->id;?>,'edit')" />
+                    <?php
+                }
+            ?>
         </td>
       </tr>
         <?php
@@ -96,6 +112,6 @@
   </table>
    </form>
   <?php echo $pagination; ?><br />
-   Export<a href="<?php echo base_url().'index.php/manage/manage/exportexcel';?>"> Excel</a>
+   Export <a href="<?php echo base_url().'index.php/manage/manage/exportexcel';?>">Excel</a>
    <a href="<?php echo base_url().'index.php/manage/manage/exportpdf';?>">PDF</a>
  

@@ -7,15 +7,9 @@
             }
         ?>
         <div class="control-group">
-        <label class="control-label"><?php echo $this->lang->line('company_name_en'); ?></label>
+        <label class="control-label"><?php echo $this->lang->line('company_name'); ?></label>
         <div class="controls">
-            <input class="span3" name="en_name" type="text" value="<?php echo isset($user->username)?$user->username:''; ?>" placeholder="<?php echo $this->lang->line('company_name_en'); ?>">
-        </div>
-        </div>
-        <div class="control-group">
-        <label class="control-label"><?php echo $this->lang->line('company_name_vi'); ?></label>
-        <div class="controls">
-            <input class="span3" name="vi_name" type="text" value="<?php echo isset($user->username)?$user->username:''; ?>" placeholder="<?php echo $this->lang->line('company_name_vi'); ?>">
+            <input class="span3" name="name" type="text" value="" placeholder="<?php echo $this->lang->line('company_name'); ?>">
         </div>
         </div>
       <div class="form-actions">

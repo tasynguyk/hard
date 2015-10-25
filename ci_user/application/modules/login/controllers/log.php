@@ -22,6 +22,7 @@ class Log extends MX_Controller {
             $this->load->library('form_validation');
             $this->load->database();
             $this->load->helper(array('form', 'url'));
+            
             if($this->session->userdata('lang'))
             {
                 $lang_use = $this->session->userdata('lang');
@@ -39,6 +40,7 @@ class Log extends MX_Controller {
         
 	public function index()
 	{
+            $this->session->set_userdata("lang","english");
             if($this->session->userdata("islogin"))
             {
                 redirect(base_url().'index.php/login/log/profile', 'location');
@@ -61,7 +63,7 @@ class Log extends MX_Controller {
                             $this->session->set_userdata('id',$user->id);
                             $this->session->set_userdata('username',$user->username);
                             $this->session->set_userdata('permission',$user->permission);
-                            
+                            $this->session->set_userdata("lang","english");
                             redirect(base_url().'index.php/login/log/profile', 'location');
                         }
                         else
@@ -86,8 +88,11 @@ class Log extends MX_Controller {
         {
             if($this->session->userdata('islogin')==1)
             {
-                $this->lang->load('form','vietnamese');
+                $id = $this->session->userdata('id');
+                $this->load->model("user_model");
+                $data['group'] = $this->user_model->get_group($id);
                 $data['username'] = $this->session->userdata('username');
+                $data['page_sub_title'] = $this->lang->line('profile');
                 $data['page_title'] = 'Sutrixmedia | '.$this->lang->line('profile');
                 $data['page_content'] = $this->load->view('profile_view',$data,true);
                 $this->load->view('master_layout', $data);
@@ -102,6 +107,32 @@ class Log extends MX_Controller {
         {
             $this->session->sess_destroy();
             redirect(base_url().'index.php/login/log', 'location');
+        }
+        
+        public function z()
+        {
+          //  $this->load->helper("captcha");
+          //  $vals = array(
+          //      'img_path' => './uploads/',
+           //     'img_url' => base_url().'/uploads/',
+        //        );
+$this->load->view('t');
+              /* Generate the captcha */
+          //  $captcha = create_captcha($vals);
+         //   echo 'gdffd';
+       //     echo $captcha['image'];
+        }
+        
+        public function capt()
+        {
+            $this->load->helper("captcha");
+            $vals = array(
+                'img_path' => './uploads/',
+                'img_url' => base_url().'/uploads/',
+                );
+              /* Generate the captcha */
+            $captcha = create_captcha($vals);
+            echo $captcha['image'];
         }
 }
 

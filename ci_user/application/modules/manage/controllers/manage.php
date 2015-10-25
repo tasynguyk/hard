@@ -30,7 +30,7 @@ class Manage extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
@@ -151,9 +151,7 @@ class Manage extends MX_Controller {
                     $z['curpage'] = $curpage;
                     $this->load->model('page_model');
                     
-                    
                     $data["pagination"] =  $this->page_model->create_page($z);
-                  //  $data['sortby'] = $order;
                     
                     $data['page_content'] = $this->load->view('list_view',$data,true);
                     $data['page_sub_title'] = $this->lang->line('manage_user');
@@ -357,7 +355,6 @@ class Manage extends MX_Controller {
                             {
                                 $this->load->model('user_model');
                                 $data['user'] = $this->user_model->get_user_byid($id);
-                               // $this->load->view('master_layout',$data);
                             }
                             else 
                             {
@@ -473,31 +470,24 @@ class Manage extends MX_Controller {
                             {
                                 if($this->input->post('edit') && $this->acl->can_edit($id_user, 2))
                                 {
-                                    $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
-                                    $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
+                                    $this->form_validation->set_rules('name',$this->lang->line('company_name'),'trim|required');
                                     if($this->form_validation->run()!=FALSE)
                                     {
-                                        $en_name = $this->input->post('en_name');
-                                        $vi_name = $this->input->post('vi_name');
+                                        $name = $this->input->post('name');
                                         
-                                        if(!$this->company_model->check_company($en_name, $vi_name, $id))
+                                        if(!$this->company_model->check_company($name, $id))
                                         {
                                             $data['error'] = $this->lang->line('company_name_use');
                                         }
                                         else
                                         {
-                                            $info = array(
-                                              'vi_name' => $vi_name,
-                                              'en_name' => $en_name
-                                            );
-                                            $this->company_model->update_company($id, $info);
+                                            $this->company_model->update_company($id, $name);
                                             $data['error'] = $this->lang->line('compele');
                                         }
                                     }
                                 }
                             }
                             $data['company'] = $this->company_model->get_company_byid($id);
-                            $data['list_company'] = $this->company_model->get_company_list();
                             $data['page_title'] = $data['page_title'] = "Sutrix media | ".$this->lang->line('edit_company');
                             $data['page_sub_title'] = $this->lang->line('edit_company');
                             $data['page_content'] = $this->load->view('edit_company_view',$data,true);
@@ -539,10 +529,6 @@ class Manage extends MX_Controller {
                     }
                     
                     $this->load->model('company_model');
-                    
-                    
-                    
-                    
                     if($this->input->post('btncancel'))
                     {
                         $this->session->unset_userdata('company_search');

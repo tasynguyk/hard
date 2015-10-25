@@ -9,9 +9,10 @@ class user_model extends CI_Model
     
     function check_user($username, $email)
     {
-        $q = $this->db->query("select * from user where "
-                . "username='$username' or email='$email'");
-       // echo $q->num_rows();
+        $this->db->where("username",$username);
+        $this->db->or_where("email",$email);
+        $q = $this->db->get("user");
+        
         if($q->num_rows()> 0)
         {
             return FALSE;
@@ -20,11 +21,6 @@ class user_model extends CI_Model
         {
             return TRUE;
         }
-    }
-    
-    function t()
-    {
-        echo 'ok';
     }
     
     function add_user($add)

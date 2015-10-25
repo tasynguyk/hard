@@ -30,7 +30,7 @@ class Admin extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
@@ -116,6 +116,11 @@ class Admin extends MX_Controller {
                 {
                     if($this->group_model->check_id_group($groupid))
                     {
+                        if($this->input->post('btncancel'))
+                        {
+                            $this->session->unset_userdata('search_member');
+                            redirect(base_url().'index.php/acl/admin/member/'.$groupid,'location');
+                        }
                         if($this->input->post('add') && $this->input->post('user_add')!='0')
                         {
                             $userid = $this->input->post('user_add');
@@ -140,11 +145,6 @@ class Admin extends MX_Controller {
                             }
                             $this->session->set_userdata('curgroup', $groupid);
                         }
-                        if($this->input->post('btncancel'))
-                        {
-                            $this->session->unset_userdata('search_member');
-                            redirect(base_url().'index.php/acl/admin/member/'.$groupid,'location');
-                        }
                         if($this->input->post('btnsearch') && $this->input->post('txtsearch')!='')
                         {
                             $search = $this->input->post('txtsearch');
@@ -162,7 +162,7 @@ class Admin extends MX_Controller {
                             $list = $this->group_model->get_user_group($groupid, $page);
                             $num_rows = $this->group_model->user_numrows_group($groupid);
                         }
-
+                        $name = $this->group_model->get_name_group($groupid);
                         $this->load->library('My_page');
                         $z['total_row'] = $num_rows;
                         $z['item_per_page'] = 3;
@@ -174,7 +174,7 @@ class Admin extends MX_Controller {
                         $data['free_list'] = $this->group_model->free_user_group();
                         $data['list'] = $list;
                         $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_member');
-                        $data['page_sub_title'] = $this->lang->line('manage_member');
+                        $data['page_sub_title'] = $this->lang->line('manage_member').' ('.$name.')';
                         $data['page_content'] = $this->load->view('listmember_view',$data,true);
                         $this->load->view('master_layout',$data);
                     }
@@ -203,7 +203,7 @@ class Admin extends MX_Controller {
                 $this->load->model('group_model');
                 if($this->acl->can_view($id, $resource))
                 {
-                    if($this->group_model->check_id_group($groupid))
+                    if($this->group_model->check_id_group($groupid)) // check id group. If not alive we will redirect
                     {
                         if($this->input->post('add') && $this->input->post('rs_add')!='0')
                         {
@@ -241,12 +241,13 @@ class Admin extends MX_Controller {
                             }
                             
                         }
+                        $name = $this->group_model->get_name_group($groupid);
                         $data['free'] = $this->group_model->free_rs_group($groupid);
                         $data['page_js'] = $this->load->view('js/rs_js_view','',true);
                         $data['free_list'] = $this->group_model->free_user_group();
                         $data['list'] = $this->group_model->get_resource_group($groupid);
-                        $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_member');
-                        $data['page_sub_title'] = $this->lang->line('manage_member');
+                        $data['page_title'] = 'Sutrix media | '.$this->lang->line('manage_permission');
+                        $data['page_sub_title'] = $this->lang->line('manage_permission').' ('.$name.')';;
                         $data['page_content'] = $this->load->view('list_resource_view',$data,true);
                         $this->load->view('master_layout',$data);
                     }

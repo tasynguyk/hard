@@ -28,14 +28,10 @@ class Lang extends MX_Controller {
 	{
             if($lang!='')
             {
-                if($lang=='en')
-                {
-                    $this->session->set_userdata('lang','english');
-                }
-                if($lang=='vi')
-                {
-                    $this->session->set_userdata('lang','vietnamese');
-                }
+                $this->load->model("lang_model");
+                $lang_name = strtolower($this->lang_model->get_name($lang));
+                $this->session->set_userdata('lang',$lang_name);
+                
             }
             if($this->session->userdata('cur_url'))
             {

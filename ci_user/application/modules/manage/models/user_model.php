@@ -10,70 +10,124 @@ class user_model extends CI_Model
     
     public function get_lang()
     {
-        if($this->session->userdata('lang'))
-        {
-            if($this->session->userdata('lang')=='english')
-            {
-                return 'en_name';
-            }
-            return 'vi_name';
-        }
-        return 'en_name';
+        return $this->session->userdata('lang');
     }
             
     function get_list_user($id, $permisson, $page, $order)
     {
-        $lang_use = $this->get_lang();
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
-                . "from user, company where user.id<>'$id' and "
-                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
-        return $q->result();
+        $lang = $this->get_lang();
+        // 
+        $this->db->where("id <>",$id);
+        $this->db->where('permission <',$permisson);
+        $this->db->order_by($order,'asc');
+        $this->db->limit(3,$page);
+        $q = $this->db->get('user');
+        $ret = $q->result();
+        foreach ($ret as $l)
+        {
+            $this->db->where('company_id',$l->companyid);
+            $this->db->where('language',$lang);
+            $n = $this->db->get('company_name');
+            if($n->num_rows()>0)
+            {
+                $l->name = $n->row()->name;
+            }
+            else
+            {
+                $l->name = '('.$this->lang->line("unname_company").' '.$l->companyid.')';
+            }
+        }
+        return $ret;
     }
     
     function get_listuser_nopage($id, $permisson, $order)
     {
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
-                . "from user, company where user.id<>'$id' and "
-                . "permission<$permisson and user.companyid=company.id order by $order");
+        $lang = $this->session->userdata("lang");
+        
+        $this->db->select("user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company_name.name");
+        $this->db->from("user");
+        $this->db->join("company","user.companyid=company.id");
+        $this->db->join("company_name",'company_name.company_id=company.id');
+        $this->db->where('company_name.language',$lang);
+        $this->db->where('user.permission   <',$permisson);
+        $this->db->where('user.id <>',$id);
+        $this->db->order_by($order);
+        $q = $this->db->get();
+        
         return $q->result();
     }
     
     
     function search_user_nopage($id, $permisson,  $order, $search)
     {
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.name "
-                . "from user, company where user.id<>'$id' and username like '%$search%' and "
-                . "permission<$permisson and user.companyid=company.id order by $order");
+        $lang = $this->session->userdata("lang");
+        
+        $this->db->select("user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company_name.name");
+        $this->db->from("user");
+        $this->db->join("company","user.companyid=company.id");
+        $this->db->join("company_name",'company_name.company_id=company.id');
+        $this->db->where('company_name.language',$lang);
+        $this->db->where('user.permission   <',$permisson);
+        $this->db->where('user.id <>',$id);
+        $this->db->like("user.username",$search);
+        $this->db->order_by($order);
+        $q = $this->db->get();
         return $q->result();
     }
     
     function search_user($id, $permisson, $page, $order, $search)
     {
-        $lang_use = $this->get_lang();
-        $q = $this->db->query("select user.id, user.username, user.email, user.dob, user.status, user.gender, user.permission, company.$lang_use as 'name' "
-                . "from user, company where user.id<>'$id' and username like '%$search%' and "
-                . "permission<$permisson and user.companyid=company.company_id order by $order limit $page,3");
-        return $q->result();
+        $lang = $this->get_lang();
+        
+        $this->db->where("id <>",$id);
+        $this->db->like("username",$search);
+        $this->db->where('permission <',$permisson);
+        $this->db->order_by($order,'asc');
+        $this->db->limit(3,$page);
+        $q = $this->db->get('user');
+        $ret = $q->result();
+        
+        
+        $ret = $q->result();
+        foreach ($ret as $l)
+        {
+            $this->db->where('company_id',$l->companyid);
+            $this->db->where('language',$lang);
+            $n = $this->db->get('company_name');  
+            if($n->num_rows()>0)
+            {
+                $l->name = $n->row()->name;
+            }
+            else
+            {
+                $l->name = '('.$this->lang->line("unname_company").' '.$l->companyid.')';
+            }
+        }
+        return $ret;
     }
     
     function search_numrow_user($id, $permisson, $search)
     {
-        $q = $this->db->query("select * from user where id<>'$id' and "
-                . "permission<$permisson and username like '%$search%'");
-        
+        $this->db->where("id <>",$id);
+        $this->db->where("permission <",$permisson);
+        $this->db->like("username",$search);
+        $q = $this->db->get("user");
         return $q->num_rows();
     }
     
     function  get_user_byid($id)
     {
-        $q = $this->db->query("select * from user where id='$id'");
+        $this->db->where('id',$id);
+        $q = $this->db->get("user");
         return $q->row();
     }
             
     function  get_numrows_user($id, $permisson)
     {
-        $q = $this->db->query("select * from user where id<>'$id' and "
-                . "permission<$permisson");
+        $this->db->where("id <>",$id);
+        $this->db->where("permission <",$permisson);
+        $q = $this->db->get("user");
+        
         return $q->num_rows();
     }
     
@@ -85,8 +139,10 @@ class user_model extends CI_Model
 
     function check_user_edit($id, $username, $email)
     {
-        $q1 = $this->db->query("select * from user where username='$username' and id <>'$id'");
-        $q2 = $this->db->query("select * from user where email='$email' and id <>'$id'");
+        $this->db->select("*")->from("user")->where('username',$username)->where('id <>',$id);
+        $q1 = $this->db->get();
+        $this->db->select("*")->from("user")->where('email',$mail)->where('id <>',$id);
+        $q2 = $this->db->get();
         if($q1->num_rows()+$q2->num_rows()>0)
         {
             return false;

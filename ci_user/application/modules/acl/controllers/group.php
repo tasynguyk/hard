@@ -30,7 +30,7 @@ class Group extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
         }
          
@@ -116,6 +116,10 @@ class Group extends MX_Controller {
                 if($this->acl->can_create($id, $resource))
                 {
                     $this->load->model('group_model');
+                    if($this->input->post('cancel'))
+                    {
+                        redirect(base_url().'index.php/login/log/profile','location');
+                    }
                     if($this->input->post('create'))
                     {
                         
@@ -164,6 +168,12 @@ class Group extends MX_Controller {
                     $id = $this->session->userdata('groupid');
                     if($this->session->userdata('groupchoose')=='edit')
                     {
+                        if($this->input->post('cancel'))
+                        {
+                            $this->session->unset_userdata('groupid');
+                            $this->session->unset_userdata('groupchoose');
+                            redirect(base_url().'index.php/acl/group','location');
+                        }
                         if($this->input->post('edit'))
                         {
                             $this->form_validation->set_rules('group_name',$this->lang->line('groupname'),'trim|required');
@@ -203,6 +213,10 @@ class Group extends MX_Controller {
                             redirect(base_url().'index.php/acl/group','location');
                         }
                     }
+                }
+                else
+                {
+                    redirect(base_url().'index.php/acl/group','location');
                 }
             }
         }

@@ -30,8 +30,21 @@ class Create extends MX_Controller {
             }
             else
             {
-                $this->lang->load('form','vietnamese');
+                $this->lang->load('form','english');
             }
+        }
+        
+        public function z()
+        {
+            mkdir("./application/language/z",0777);
+            $src = './application/language/english';
+            $dst = './application/language/z';
+            $files = glob("./application/language/english/*.*");
+                  foreach($files as $file){
+                  $file_to_go = str_replace($src,$dst,$file);
+                  copy($file, $file_to_go);
+                  }
+
         }
          
 	public function index()
@@ -54,7 +67,10 @@ class Create extends MX_Controller {
                     $this->load->model('company_model');
                     
                   //  $data[]
-                    
+                    if($this->input->post('cancel'))
+                    {
+                        redirect(base_url().'index.php/login/log/profile','location');
+                    }   
                     if($this->input->post('create'))
                     {
                         $this->form_validation->set_rules('username',$this->lang->line('username'),'trim|required');
@@ -76,7 +92,6 @@ class Create extends MX_Controller {
                             if(!$this->time_model->check_time($day,$month,$year))
                             {
                                 $data['error'] = $this->lang->line('dob_valid');
-                                $data['page_content'] = $this->load->view('create_view',$data,true);
                             }
                             else
                             {
@@ -90,7 +105,6 @@ class Create extends MX_Controller {
                                 if(!$this->user_model->check_user($username, $email))
                                 {
                                     $data['error'] = $this->lang->line('username_email_use');
-                                    $data['page_content'] = $this->load->view('create_view',$data,true);
                                 }
                                 else 
                                 {
@@ -142,23 +156,34 @@ class Create extends MX_Controller {
                 else
                 {
                     $this->load->model('company_model');
+                    if($this->input->post('cancel'))
+                    {
+                        redirect(base_url().'index.php/login/log/profile','location');
+                    }
                     if($this->input->post('create'))
                     {
-                        $this->form_validation->set_rules('en_name',$this->lang->line('company_name_en'),'trim|required');
-                        $this->form_validation->set_rules('vi_name',$this->lang->line('company_name_vi'),'trim|required');
+                        $this->form_validation->set_rules('name',$this->lang->line('company_name'),'trim|required');
                         if($this->form_validation->run()!=FALSE)
                         {
-                            $en_name = $this->input->post('en_name');
-                            $vi_name = $this->input->post('vi_name');
-                            if(!$this->company_model->check_name_company($en_name, $vi_name))
+                            $name = $this->input->post('name');
+                            $language = $this->session->userdata('lang');
+                            
+                            $add = array(
+                              'name' => $name,
+                              'language' => $language
+                            );
+                            
+                            
+                            if(!$this->company_model->check_name_company($name, $language))
                             {
                                 $data['error'] = $this->lang->line('company_name_use');
                             }
                             else
                             {
-                                $this->company_model->insert_company($en_name, $vi_name);
+                                $this->company_model->insert_company($add);
                                 $data['error'] = $this->lang->line('compele');
                             }
+                            
                         }
                     }
                     $data['page_title'] = 'Sutrix media | '.$this->lang->line('create_company');

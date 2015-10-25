@@ -10,27 +10,42 @@ class company_model extends CI_Model
     
     public function get_lang()
     {
-        if($this->session->userdata('lang'))
-        {
-            if($this->session->userdata('lang')=='english')
-            {
-                return 'en_name';
-            }
-            return 'vi_name';
-        }
-        return 'en_name';
+        return $this->session->userdata('lang');
     }
     
     public function get_company()
     {
         $lang = $this->get_lang();
-        $q = $this->db->query("select company_id as 'id', $lang as 'name' from company");
-        return $q->result();
+        $q = $this->db->get("company");
+        $ret = array();
+        foreach ($q->result() as $l)
+        {
+            $p = new stdClass();
+            $p->id = $l->id;
+            
+            $this->db->where("company_id",$p->id);
+            $this->db->where("language",$lang);
+            $n = $this->db->get("company_name");
+            
+            if($n->num_rows()>0)
+            {
+                $p->name = $n->row()->name;
+            }
+            else
+            {
+                $p->name = '('.$this->lang->line("unname_company").' '.$p->id.')';
+            }
+            array_push($ret, $p);
+        }
+        return $ret;
     }
     
-    public function check_name_company($en_name, $vi_name)
+    public function check_name_company($name, $language)
     {
-        $q = $this->db->query("select * from company where en_name='$en_name' or vi_name='$vi_name'");
+        $this->db->where("language",$language);
+        $this->db->where("name",$name);
+        $q = $this->db->get("company_name");
+        
         if($q->num_rows()>0)
         {
             return FALSE;
@@ -41,14 +56,18 @@ class company_model extends CI_Model
         }
     }
     
-    public function insert_company($en_name, $vi_name)
+    public function insert_company($name)
     {
-        $data = array
-                (
-                    'vi_name' => $vi_name,
-                    'en_name' => $en_name
-                );
-        $this->db->insert('company',$data);
+        $this->db->query('insert into company values()');
+        $id = $this->db->insert_id();
+        
+        $data = array(
+            'company_id' => $id,
+            'language' => $name['language'],
+            'name' => $name['name']
+        );
+        
+        $this->db->insert('company_name', $data);
     }
 }
  
